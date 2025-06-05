@@ -27,6 +27,13 @@ Yatube API
 Обновление токена
 JWT-аутентификация
 
+Технологический стек:
+Python 3.12.7
+Django 5.1.1
+Django REST Framework 5.4.0
+Simple JWT (JWT-аутентификация)
+SQLite
+Swagger/ReDoc (документация API)
 
 Как запустить?
 Клонировать репозиторий:
@@ -72,3 +79,6 @@ POST http://localhost:8000/api/v1/posts/
 ```
 pytest -v
 ```
+Автор
+Проект разработан [Павел Куличенко]
+GitHub: https://github.com/Inswty

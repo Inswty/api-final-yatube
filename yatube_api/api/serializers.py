@@ -16,9 +16,7 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.SlugRelatedField(
-        read_only=True, slug_field='username'
-    )
+    author = SlugRelatedField(slug_field='username', read_only=True)
 
     class Meta:
         fields = '__all__'
@@ -34,24 +32,19 @@ class GroupSerializer(serializers.ModelSerializer):
 
 class FollowSerializer(serializers.ModelSerializer):
     user = SlugRelatedField(slug_field='username', read_only=True)
-    default = serializers.CurrentUserDefault()  # ХЗ...
     following = SlugRelatedField(slug_field='username',
                                  queryset=User.objects.all())
-
-    def validate(self, data):
-        user = self.context['request'].user
-        following = data['following']
-        if user == following:
-            raise serializers.ValidationError(
-                {'following': 'Нельзя подписаться на самого себя!'}
-            )
-        if Follow.objects.filter(user=user, following=following).exists():
-            raise serializers.ValidationError(
-                {'following': 'Вы уже подписаны на этого пользователя!'}
-            )
-
-        return data
 
     class Meta:
         model = Follow
         fields = ('user', 'following')
+
+    def validate_following(self, value):
+        user = self.context['request'].user
+        if user == value:
+            raise serializers.ValidationError(
+                'Нельзя подписаться на самого себя!')
+        if Follow.objects.filter(user=user, following=value).exists():
+            raise serializers.ValidationError(
+                'Вы уже подписаны на этого пользователя!')
+        return value
