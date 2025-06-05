@@ -35,7 +35,7 @@ class Post(models.Model):
     class Meta():
         verbose_name = 'публикация'
         verbose_name_plural = 'публикации'
-        ordering = ['-pub_date']
+        ordering = ('-pub_date',)
 
     def __str__(self):
         return self.text[:MAX_STR_LENGTH]
@@ -75,7 +75,7 @@ class Follow(models.Model):
             models.UniqueConstraint(fields=('user', 'following',),
                                     name='unique_follow'),
             models.CheckConstraint(
-                name="%(app_label)s_%(class)s_prevent_self_follow",
+                name='%(app_label)s_%(class)s_prevent_self_follow',
                 check=~models.Q(user=models.F('following')),
             ),
         ]
